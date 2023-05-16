@@ -7,9 +7,9 @@ import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes />
-    </AuthProvider>
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
   );
 }
 

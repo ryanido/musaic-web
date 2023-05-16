@@ -3,20 +3,20 @@ import { BrowserRouter as Router, Routes as RRoutes, Route, Navigate } from 'rea
 import Home from '../pages/Home'
 import SignUp from '../pages/SignUp'
 import { useAuth } from '../features/auth/AuthContext'
-import NavBar from '../components/Navbar'
 import HomeSO from '../pages/HomeSO'
+import NavBar from '../components/Navbar'
 const Routes = () => {
     const { auth, user } = useAuth()
     return (
-        <div style={{ backgroundColor: '#28282B'}}>
+        <div style={{
+            backgroundColor: '#28282B',
+            height: '100vh',
+            width: '100%',
+        }}>
             <div className='routes-container'>
                 <Router>
                     <RRoutes >
-                        <Route exact path="/" element=
-                            {!user ? <Navigate to={'/signin'} replace /> : <Home />
-                            } />
-                        <Route exact path="/signin" element={<HomeSO />} />
-                        <Route exact path="/signup" element={<SignUp />} />
+                        <Route exact path="/" element={!user ? <Home /> : <HomeSO />} />
                     </RRoutes>
                 </Router>
             </div>
