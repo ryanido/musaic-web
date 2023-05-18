@@ -8,7 +8,7 @@ export const Carousel = ({ title, albums}) => {
     albums = [
         {
             id: 1,
-            name: 'Album 1',
+            name: 'Birds in the Trap Sing McKnight',
             images: [
                 {
                     url: 'https://via.placeholder.com/300x300',

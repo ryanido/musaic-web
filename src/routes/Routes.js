@@ -1,12 +1,11 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes as RRoutes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes as RRoutes, Route } from 'react-router-dom'
 import Home from '../pages/Home'
-import SignUp from '../pages/SignUp'
-import { useAuth } from '../features/auth/AuthContext'
+import { useSelector } from 'react-redux'
 import HomeSO from '../pages/HomeSO'
-import NavBar from '../components/Navbar'
 const Routes = () => {
-    const { auth, user } = useAuth()
+    const user  = useSelector(state => state.user);
+    console.log(user)
     return (
         <div style={{
             backgroundColor: '#28282B',
@@ -16,7 +15,7 @@ const Routes = () => {
             <div className='routes-container'>
                 <Router>
                     <RRoutes >
-                        <Route exact path="/" element={!user ? <Home /> : <HomeSO />} />
+                        <Route exact path="/" element={user.currentUser ? <Home /> : <HomeSO />} />
                     </RRoutes>
                 </Router>
             </div>

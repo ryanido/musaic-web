@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import ratingsReducer from "../features/rating/ratingSlice";
+import userReducer from "./features/auth/userSlice";
 
 export default configureStore({
     reducer: {
-        ratings: ratingsReducer,
+        user: userReducer,
     },
 });
+
+
