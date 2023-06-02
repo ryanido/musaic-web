@@ -1,8 +1,30 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link,  useNavigate } from "react-router-dom";
 import { Navbar, Container, Nav, Form, Button, Modal} from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { signInAsync, signOutAsync } from '../features/auth/userSlice';
+
+
+const SpotifyAuth = () => {
+  const handleLogin = () => {
+    const clientID = '2d4a009556684de68b9415e22213fdb1';
+    const redirectURI = 'http://localhost:3000/'; // Replace with your desired redirect URI
+    const scope = 'user-read-private user-read-email'; // Add any required scopes
+
+    // Redirect the user to the Spotify authorization URL
+    window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&scope=${encodeURIComponent(scope)}&response_type=token`;
+  };
+
+ 
+
+  return (
+    <div>
+      <button onClick={handleLogin}>Log in with Spotify</button>
+    </div>
+  );
+};
+
+
 
 const NavBar = () => {
   const [showSignInModal, setShowSignInModal] = useState(false);
@@ -11,7 +33,7 @@ const NavBar = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const user  = useSelector(state => state.user);
+  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   
   const handleOptionClick = (option) => {
@@ -24,7 +46,7 @@ const NavBar = () => {
 
   const handleSignIn = (e) => {
     e.preventDefault();
-    dispatch(signInAsync(email, password));
+    dispatch(signInAsync({ email, password }));
   };
 
   const handleSignUp = (e) => {
@@ -51,26 +73,24 @@ const NavBar = () => {
 
   return (
     <>
-      <Navbar
-        bg="transparent"
-        variant="dark"
-      >
+      <Navbar bg="transparent" variant="dark">
         <Container className="d-flex justify-content-between">
           <Navbar.Brand style={{ color: '#1DB954' }} as={Link} to="/"> Musaic</Navbar.Brand>
           <Nav>
-            {user.currentUser ? (
+            {user.status === 'succeeded' ? (
               <>
                 <Nav.Link as={Link} to="/albums">Albums</Nav.Link>
                 <Nav.Link as={Link} to="/songs">Songs</Nav.Link>
                 {/* sign out  */}
-                <Nav.Link onClick={() => handleSignOut()}>Sign Out</Nav.Link>
+                <Nav.Link onClick={handleSignOut}>Sign Out</Nav.Link>
                 <Nav.Link>{user.currentUser}</Nav.Link>
               </>
             ) : (
               <>
-                <Nav.Link onClick={() => handleOptionClick("Sign In")}>
+                {/* <Nav.Link onClick={() => handleOptionClick("Sign In")}>
                   Sign In
-                </Nav.Link>
+                </Nav.Link> */}
+                <SpotifyAuth />
                 <Nav.Link onClick={() => handleOptionClick("Create Account")}>
                   Create Account
                 </Nav.Link>
@@ -105,7 +125,7 @@ const NavBar = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" disabled={user.status === 'loading'}>
               Sign In
             </Button>
           </Form>
@@ -151,18 +171,16 @@ const NavBar = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" disabled={user.status === 'loading'}>
               Create Account
             </Button>
           </Form>
-
-
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelSignUp}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSignUp}>
+          <Button variant="primary" onClick={handleSignUp} disabled={user.status === 'loading'}>
             Sign Up
           </Button>
         </Modal.Footer>

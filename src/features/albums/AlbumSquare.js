@@ -33,7 +33,7 @@ const AlbumSquare = ({ album }) => {
             onMouseLeave={handleMouseLeave}
             overlay={isHovered && <Tooltip id="tooltip">{album.name}</Tooltip>}
         >
-            <Card.Img src={album.images[0].url} alt="Card image" />
+            <Card.Img src={album.cover} alt="Card image" />
             {isHovered && (
                 <OverlayTrigger
                     placement="top"

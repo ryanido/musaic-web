@@ -1,53 +1,76 @@
-// userSlice.js
-
-import { createSlice } from '@reduxjs/toolkit';
-import { signInWithEmailAndPassword,signOut as fbsignOut } from 'firebase/auth';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { signInWithEmailAndPassword, signOut as fbsignOut } from 'firebase/auth';
 import { auth } from '../../features/auth/FirebaseConfig';
 
-
 const initialState = {
-  currentUser: null,
+    currentUser: null,
+    status: 'idle',
+    error: null,
 };
+
+
+export const signInAsync = createAsyncThunk(
+    'user/signIn',
+    async ({ email, password }, { rejectWithValue }) => {
+        try {
+            // Sign in with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            // Return the user ID as the result
+            return userCredential.user.uid;
+        } catch (error) {
+            // Reject the promise with the error details
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const signOutAsync = createAsyncThunk(
+    'user/signOut',
+    async (_, { rejectWithValue }) => {
+        try {
+            // Sign out with Firebase
+            await fbsignOut(auth);
+            // Return undefined as the result
+            return undefined;
+        } catch (error) {
+            // Reject the promise with the error details
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {
-    signIn: (state, action) => {
-        console.log("action.payload",action.payload)
-      state.currentUser = action.payload;
+    name: 'user',
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(signInAsync.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(signInAsync.fulfilled, (state, action) => {
+                state.currentUser = action.payload;
+                state.status = 'succeeded';
+            })
+            .addCase(signInAsync.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+            .addCase(signOutAsync.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(signOutAsync.fulfilled, (state) => {
+                state.currentUser = null;
+                state.status = 'idle';
+            })
+            .addCase(signOutAsync.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            });
+
     },
-    signOut: (state) => {
-      state.currentUser = null;
-    },
-  },
 });
-
-export const { signIn, signOut } = userSlice.actions;
-
-export const signInAsync = (email, password) => async (dispatch) => {
-  try {
-    // Sign in with Firebase
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    // Dispatch the signIn action with the user data
-    dispatch(signIn(userCred.user.uid));
-  } catch (error) {
-    // Handle sign-in error
-    console.error('Sign in error:', error);
-  }
-};
-
-export const signOutAsync = () => async (dispatch) => {
-  try {
-    // Sign out with Firebase
-    await fbsignOut(auth);
-
-    // Dispatch the signOut action
-    dispatch(signOut());
-  } catch (error) {
-    // Handle sign-out error
-    console.error('Sign out error:', error);
-  }
-};
 
 export default userSlice.reducer;
