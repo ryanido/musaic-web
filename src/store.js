@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/auth/userSlice";
-import { apiSlice } from "./features/api/apiSlice";
+import { spotifyApi } from "./features/api/spotifyApiSlice";
 
 export default configureStore({
     reducer: {
         user: userReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
+        [spotifyApi.reducerPath]: spotifyApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>{
-        return getDefaultMiddleware().concat(apiSlice.middleware)
+        return getDefaultMiddleware().concat(spotifyApi.middleware)
     }
 });
 

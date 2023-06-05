@@ -24,3 +24,15 @@ export const getUserProfile = async (accessToken) => {
 
   return await fetchSpotifyAPI(url, options);
 };
+
+// Get recent releases
+export const getNewReleases = async (accessToken) => {
+  const url = `${SPOTIFY_API_BASE_URL}/browse/new-releases?country=US&limit=20`;
+  const options = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  
+  return await fetchSpotifyAPI(url, options);
+};

@@ -2,11 +2,13 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    accessToken: null,
-    profile: null,
+//local Storage
+    accessToken: localStorage.getItem('accessToken'),
+    profile: localStorage.getItem('profile'),
   },
   reducers: {
     setAccessToken: (state, action) => {

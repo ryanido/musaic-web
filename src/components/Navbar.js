@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Link,  useNavigate } from "react-router-dom";
-import { Navbar, Container, Nav, Form, Button, Modal} from "react-bootstrap";
-import { useSelector, useDispatch } from 'react-redux';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Navbar, Container, Nav} from "react-bootstrap";
+import { useSelector} from 'react-redux';
 
 
 const SpotifyAuth = () => {
@@ -27,6 +27,7 @@ const SpotifyAuth = () => {
 
 const NavBar = () => {
  
+  const user = useSelector((state) => state.user.accessToken);
 
   return (
     <>
@@ -34,7 +35,7 @@ const NavBar = () => {
         <Container className="d-flex justify-content-between">
           <Navbar.Brand style={{ color: '#1DB954' }} as={Link} to="/"> Musaic</Navbar.Brand>
           <Nav>
-            {false ? (
+            {user ? (
               <>
                 <Nav.Link as={Link} to="/albums">Albums</Nav.Link>
                 <Nav.Link as={Link} to="/songs">Songs</Nav.Link>

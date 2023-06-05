@@ -31,31 +31,16 @@ const AlbumSquare = ({ album }) => {
             onClick={handleClicked}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            overlay={isHovered && <Tooltip id="tooltip">{album.name}</Tooltip>}
         >
-            <Card.Img src={album.cover} alt="Card image" />
-            {isHovered && (
-                <OverlayTrigger
-                    placement="top"
-                    delay={{ show: 250, hide: 400 }}
-                    overlay={<Tooltip id="tooltip">{album.name}</Tooltip>}
 
-                >
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: '-30px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            background: '#1DB954',
-                            padding: '5px 10px',
-                            borderRadius: '10px',
-                        }}
-                    >
-                        {album.name}
-                    </div>
-                </OverlayTrigger>
-            )}
+            <OverlayTrigger
+                placement="top"
+                delay={{ show: 250, hide: 400 }}
+                overlay={<Tooltip id="tooltip">{album.name}</Tooltip>}
+                trigger={['hover', 'focus']}>
+                    <Card.Img src={album.cover} alt="album cover" />
+            </OverlayTrigger>
+
         </Card>
     );
 };
