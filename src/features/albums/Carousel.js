@@ -20,7 +20,7 @@ export const Carousel = ({ title, albumQuery }) => {
         <Link 
           className="align-self-start text-white fw-light h3"
           style={{ textDecoration: 'none' }}
-          to={`/albums/${title.toLowerCase().replace(/\s+/g, '-')}`}
+          to={`/albums`}
         >
           {title}
         </Link>

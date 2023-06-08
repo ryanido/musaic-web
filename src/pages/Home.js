@@ -1,14 +1,12 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import NavBar from '../components/Navbar';
 import { Container } from 'react-bootstrap';
 import { Carousel } from '../features/albums/Carousel';
-import { useGetNewReleasesQuery, useGetTopChartsQuery } from '../features/api/spotifyApiSlice';
+import { useGetNewReleasesQuery, useGetTopChartsQuery,useGetUserProfileQuery } from '../features/api/spotifyApiSlice';
 import { Spinner } from 'react-bootstrap';
 
 const Home = () => {
-  const profile = useSelector((state) => state.user.profile);
-
+  const { data: profile } = useGetUserProfileQuery();
 
   if (!profile) {
     return (

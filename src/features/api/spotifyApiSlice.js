@@ -2,6 +2,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com/v1';
 
+const clientID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
+const redirectURI = process.env.REACT_APP_REDIRECT_URI;
+
 const baseQuery = fetchBaseQuery({
   baseUrl: SPOTIFY_API_BASE_URL,
   prepareHeaders: (headers, { getState }) => {
@@ -20,6 +24,32 @@ export const spotifyApi = createApi({
     getUserProfile: builder.query({
       query: () => `/me`,
     }),
+    getAccessToken: builder.mutation({
+      query: (code) => (
+        {
+        url: 'https://accounts.spotify.com/api/token',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${btoa(`${clientID}:${clientSecret}`)}`,
+        },
+        body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirectURI}`,
+      }),
+      // set accessToken and refreshToken in the state
+      // and return accessToken
+    }),
+     // Refresh access token
+     refreshToken: builder.mutation({
+      query: (refreshToken) => ({
+        url: 'https://accounts.spotify.com/api/token',
+        method: 'POST',
+        body: `grant_type=refresh_token&refresh_token=${refreshToken}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${btoa(clientID + ':' + clientSecret)}`, 
+        },
+      }),
+    }),
     getNewReleases: builder.query({
       query: ({limit = 6,offset = 0}) => `browse/new-releases?country=US&limit=${limit}&offset=${offset}`,
       transformResponse: (response) => {
@@ -33,7 +63,7 @@ export const spotifyApi = createApi({
         return transformedData;
       },
     }),
-    
+  
     //Get top songs from US Charts
     getTopCharts: builder.query({
       query: ({limit = 6,offset = 0}) => `playlists/37i9dQZEVXbKM896FDX8L1/tracks?limit=${limit}&offset=${offset}`,
@@ -46,10 +76,9 @@ export const spotifyApi = createApi({
           // Add other attributes you want to include
         }));
         return transformedData;
-      }
-    })
+      },
+    }),
   }),
 });
 
-
-export const { useGetUserProfileQuery, useGetNewReleasesQuery, useGetTopChartsQuery } = spotifyApi;
+export const { useGetUserProfileQuery, useGetNewReleasesQuery, useGetTopChartsQuery, useRefreshTokenMutation,useGetAccessTokenMutation } = spotifyApi;

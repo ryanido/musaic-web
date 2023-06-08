@@ -8,18 +8,25 @@ const userSlice = createSlice({
   initialState: {
 //local Storage
     accessToken: localStorage.getItem('accessToken'),
-    profile: localStorage.getItem('profile'),
+    refreshToken: localStorage.getItem('refreshToken'),
+    expiredTime: localStorage.getItem('expiredTime'),
   },
   reducers: {
     setAccessToken: (state, action) => {
+      localStorage.setItem('accessToken', action.payload);
       state.accessToken = action.payload;
     },
-    setProfile: (state, action) => {
-      state.profile = action.payload;
+    setRefreshToken: (state, action) => {
+      localStorage.setItem('refreshToken', action.payload);
+      state.refreshToken = action.payload;
     },
+    setExpiredTime: (state, action) => {
+      localStorage.setItem('expiredTime', action.payload);
+      state.expiredTime = action.payload;
+    }
   },
 });
 
-export const { setAccessToken, setProfile } = userSlice.actions;
+export const { setAccessToken, setRefreshToken,setExpiredTime } = userSlice.actions;
 
 export default userSlice.reducer;

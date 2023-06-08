@@ -6,12 +6,12 @@ import { useSelector} from 'react-redux';
 
 const SpotifyAuth = () => {
   const handleLogin = () => {
-    const clientID = '2d4a009556684de68b9415e22213fdb1';
-    const redirectURI = 'http://localhost:3000/'; // Replace with your desired redirect URI
+    const clientID = process.env.REACT_APP_SPOTIFY_CLIENT_ID; 
+    const redirectURI = process.env.REACT_APP_REDIRECT_URI;
     const scope = 'user-read-private user-read-email'; // Add any required scopes
 
     // Redirect the user to the Spotify authorization URL
-    window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&scope=${encodeURIComponent(scope)}&response_type=token`;
+    window.location.href = `https://accounts.spotify.com/authorize?client_id=${clientID}&redirect_uri=${redirectURI}&scope=${encodeURIComponent(scope)}&response_type=code`;
   };
 
  

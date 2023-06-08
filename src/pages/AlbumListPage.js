@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import AlbumList from '../features/albums/AlbumList';
 
 const AlbumListPage = ({ albumQuery }) => {
-  const { page } = useParams();
+  const { page = 1} = useParams();
+  console.log(page);
   const navigate = useNavigate();
   const pageNumber = parseInt(page, 10) || 0;
   const { data: albums, isLoading, isError } = albumQuery({
@@ -12,7 +13,7 @@ const AlbumListPage = ({ albumQuery }) => {
   });
 
   const handlePreviousPage = () => {
-    const previousPage = pageNumber > 0 ? pageNumber - 1 : 0;
+    const previousPage = pageNumber > 1 ? pageNumber - 1 : 0;
     navigate(`/albums/page/${previousPage}`, { replace: true });
   };
 
