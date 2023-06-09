@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setAccessToken, setRefreshToken, setExpiredTime } from './userSlice';
 import { useGetAccessTokenMutation, useRefreshTokenMutation } from '../api/spotifyApiSlice';
 
+
 export const useSpotifyAuth = () => {
     const dispatch = useDispatch();
     const refreshToken = useSelector(state => state.user.refreshToken);
@@ -20,6 +21,12 @@ export const useSpotifyAuth = () => {
                     console.log(data);
                     dispatch(setAccessToken(data.access_token));
                     dispatch(setExpiredTime(data.expires_in * 1000 + new Date().getTime()));
+                })
+                .catch((error) => {
+                    console.error('Failed to refresh token: ', error);
+                    dispatch(setAccessToken(null));
+                    dispatch(setRefreshToken(null));
+                    dispatch(setExpiredTime(null));
                 })
         }
     }, [dispatch, getRefreshToken, refreshToken, expiredTime]);

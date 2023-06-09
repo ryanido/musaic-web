@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import BACKDROP from '../assets/backdrop.png'
-import NavBar from '../components/Navbar'
 
 const HomeSO = () => (
   <div
@@ -15,7 +14,6 @@ const HomeSO = () => (
       backgroundRepeat: 'no-repeat',
     }}
   >
-    <NavBar />
     <Container className='d-flex flex-column justify-content-end align-items-center pb-5 mt-5'>
       <h1 className='home-title text-white font-weight-bold'>Musaic</h1>
       <h2 className='home-subtitle text-white-50 mt-'>Your music, your way</h2>
